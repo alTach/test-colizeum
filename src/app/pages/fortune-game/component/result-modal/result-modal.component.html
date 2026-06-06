@@ -1,1 +1,23 @@
-<p>result-modal works!</p>
+<dialog #dialog (click)="onDialogClick($event)" (cancel)="close()">
+  @if (prize()) {
+    <div class="modal-content">
+      @if (prize()?.type === 'prize') {
+        <div class="prize-layout">
+          <div class="sparkles">✨🎉✨</div>
+          <div class="modal-icon animate-bounce">{{ prize()?.icon }}</div>
+          <h2 class="modal-title">Поздравляем!</h2>
+          <p class="modal-desc">Вы выиграли:</p>
+          <div class="prize-name">{{ prize()?.label }}</div>
+          <button class="modal-action-btn claim" (click)="close()">Забрать</button>
+        </div>
+      } @else {
+        <div class="empty-layout">
+          <div class="modal-icon">😔</div>
+          <h2 class="modal-title">Не повезло!</h2>
+          <p class="modal-desc">Попробуй завтра</p>
+          <button class="modal-action-btn close" (click)="close()">Закрыть</button>
+        </div>
+      }
+    </div>
+  }
+</dialog>

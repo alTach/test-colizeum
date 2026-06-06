@@ -1,1 +1,82 @@
-<p>fortune-game works!</p>
+<div class="fortune-page">
+  <!-- Glowing stardust background -->
+  <div class="starry-overlay"></div>
+  
+  <div class="content-wrapper">
+    <header class="header">
+      <h1 class="main-title">Колесо фортуны</h1>
+      
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-icon">🪙</div>
+          <div class="stat-content">
+            <span class="stat-label">Осталось попыток сегодня</span>
+            <span class="stat-value">{{ store.remainingAttempts() }}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Game Container -->
+      <section class="game-section">
+        <div class="wheel-outer-wrapper">
+          <!-- Downward pointing golden arrow indicator -->
+          <div class="wheel-pointer"></div>
+          <div class="glow-halo"></div>
+          
+          @if (prizeFacade.error()) {
+            <div class="error-overlay">
+              <p class="error-text">⚠️ {{ prizeFacade.error() }}</p>
+            </div>
+          } @else {
+            @defer (when !prizeFacade.loading() && prizeFacade.prizes().length > 0) {
+              <cl-wheel [prizes]="prizeFacade.prizes()" />
+            } @placeholder {
+              <div class="loader-overlay">
+                <span class="spinner"></span>
+                <p>Загрузка призов...</p>
+              </div>
+            } @loading {
+              <div class="loader-overlay">
+                <span class="spinner"></span>
+                <p>Загрузка колеса...</p>
+              </div>
+            } @error {
+              <div class="error-overlay">
+                <p class="error-text">⚠️ Не удалось отобразить колесо</p>
+              </div>
+            }
+          }
+        </div>
+
+        <!-- Spin Action Button -->
+        <div class="action-wrapper">
+          @if (store.remainingAttempts() > 0) {
+            <button class="spin-action-btn" 
+                    [disabled]="store.spinning() || prizeFacade.loading()" 
+                    (click)="onSpin()">
+              @if (store.spinning()) {
+                Крутится...
+              } @else {
+                Крутить
+              }
+            </button>
+          } @else {
+            <button class="spin-action-btn disabled" disabled>
+              Заходи завтра
+            </button>
+          }
+        </div>
+      </section>
+
+      <!-- Extracted History Section -->
+      <section class="history-section">
+        <cl-fortune-history [history]="store.history()" (clearHistory)="onClearHistory()" />
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- Modal instance for presenting result dialogs -->
+<cl-result-modal [prize]="selectedPrize" />

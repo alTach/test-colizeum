@@ -1,0 +1,220 @@
+:host {
+  display: block;
+}
+
+dialog {
+  border: none;
+  background: transparent;
+  padding: 0;
+  max-width: 420px;
+  width: 90%;
+  border-radius: 24px;
+  overflow: visible;
+  outline: none;
+  
+  // Center alignment in viewport
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  opacity: 0;
+  
+  // Анимация перехода с поддержкой дискретного свойства display
+  transition: 
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.3s ease,
+    display 0.3s allow-discrete,
+    overlay 0.3s allow-discrete;
+  
+  &[open] {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    
+    // Начальное состояние при открытии диалога для анимации через @starting-style
+    @starting-style {
+      transform: translate(-50%, -50%) scale(0.9);
+      opacity: 0;
+    }
+  }
+}
+
+dialog::backdrop {
+  background: rgba(8, 5, 2, 0.85);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  
+  // Анимация подложки с поддержкой дискретного display
+  transition: 
+    opacity 0.3s ease,
+    display 0.3s allow-discrete,
+    overlay 0.3s allow-discrete;
+}
+
+dialog[open]::backdrop {
+  opacity: 1;
+  
+  // Начальное состояние подложки при открытии
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.modal-content {
+  background: radial-gradient(ellipse at 50% 0%, #291d03 0%, #0c0801 80%);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  border-radius: 24px;
+  padding: 40px 32px 32px;
+  text-align: center;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(255, 170, 0, 0.15),
+    inset 0 0 16px rgba(255, 200, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    transparent 0deg,
+    rgba(255, 215, 0, 0.04) 120deg,
+    transparent 180deg
+  );
+  animation: rotateGlow 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotateGlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.prize-layout, .empty-layout {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sparkles {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #ffcc00;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
+}
+
+.modal-icon {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 12px rgba(255, 200, 0, 0.3));
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+  }
+  50% {
+    transform: translateY(-12px);
+    animation-timing-function: cubic-bezier(0.77, 0, 1, 1);
+  }
+}
+
+.modal-title {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(255, 200, 0, 0.4));
+}
+
+.modal-desc {
+  font-family: Arial, sans-serif;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.prize-name {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 12px;
+  padding: 12px 24px;
+  margin-bottom: 28px;
+  min-width: 220px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.modal-action-btn {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 48px;
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &.claim {
+    background: linear-gradient(180deg, #ffe033 0%, #e6a800 50%, #c47d00 100%);
+    color: #1a0f00;
+    box-shadow: 
+      0 4px 16px rgba(255, 170, 0, 0.4),
+      inset 0 2px 0 rgba(255, 255, 255, 0.3);
+      
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 22px rgba(255, 170, 0, 0.6),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &.close {
+    background: linear-gradient(180deg, #444 0%, #222 100%);
+    color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    
+    &:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(180deg, #555 0%, #333 100%);
+      color: #fff;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}

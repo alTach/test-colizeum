@@ -1,0 +1,253 @@
+.fortune-page {
+  background: radial-gradient(ellipse at 50% 30%, #251701 0%, #0c0800 60%, #030200 100%);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  font-family: 'Inter', Arial, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+  padding: 40px 16px;
+}
+
+// Sparkle/Stardust background overlay
+.starry-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px);
+  background-size: 550px 550px;
+  background-position: 0 0;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.content-wrapper {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.main-title {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 180, 0, 0.5);
+  margin: 0 0 20px;
+  
+  @media (min-width: 768px) {
+    font-size: 44px;
+    letter-spacing: 4px;
+  }
+}
+
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 200, 0, 0.2);
+  border-radius: 20px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.stat-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+  font-family: 'Arial Black', Arial, sans-serif;
+}
+
+// Main page structures
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: start;
+  
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 340px;
+    gap: 40px;
+  }
+}
+
+// Game wheel container
+.game-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wheel-outer-wrapper {
+  position: relative;
+  width: 390px;
+  height: 390px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  // Make responsive on small viewports
+  @media (max-width: 410px) {
+    width: 320px;
+    height: 320px;
+    
+    cl-wheel {
+      transform: scale(0.82);
+    }
+  }
+}
+
+// Downward pointer
+.wheel-pointer {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 36px solid #ffd700;
+  filter: drop-shadow(0 0 10px rgba(255, 200, 0, 0.9));
+  z-index: 10;
+}
+
+// Glowing background aura
+.glow-halo {
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 170, 0, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  animation: pulsingGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulsingGlow {
+  0%, 100% { opacity: 0.6; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+.loader-overlay, .error-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 215, 0, 0.1);
+  border-left-color: #ffd700;
+  border-radius: 50%;
+  animation: spinLoader 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spinLoader {
+  to { transform: rotate(360deg); }
+}
+
+.error-text {
+  color: #ff4d4d;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.action-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+// Spin trigger button
+.spin-action-btn {
+  background: linear-gradient(180deg, #ffe033 0%, #e6a800 50%, #c47d00 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 16px 80px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #2a1400;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: 'Arial Black', Arial, sans-serif;
+  box-shadow: 
+    0 4px 20px rgba(255, 170, 0, 0.35),
+    inset 0 2px 0 rgba(255, 255, 255, 0.22);
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 6px 26px rgba(255, 170, 0, 0.55),
+      inset 0 2px 0 rgba(255, 255, 255, 0.22);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  &.disabled {
+    background: linear-gradient(180deg, #3a3a3a 0%, #222222 100%);
+    color: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+// History section styling wrapper
+.history-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

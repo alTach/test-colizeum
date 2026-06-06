@@ -1,0 +1,282 @@
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+.wf-wrap{
+  background:radial-gradient(ellipse at 50% 40%,#251800 0%,#100b00 55%,#070500 100%);
+  min-height:740px;display:flex;flex-direction:column;align-items:center;
+  padding:28px 16px 36px;position:relative;overflow:hidden;
+}
+.star{position:absolute;border-radius:50%;background:#ffd700;animation:tw var(--d,3s) var(--dl,0s) infinite}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.5)}50%{opacity:.65;transform:scale(1.3)}}
+.wf-title{
+  font-family:'Arial Black',Arial,sans-serif;font-size:30px;font-weight:900;
+  letter-spacing:3px;color:#fff;text-transform:uppercase;
+  text-shadow:0 0 24px rgba(255,200,0,.55);margin-bottom:18px;z-index:2;
+}
+.stats{display:flex;align-items:center;gap:14px;margin-bottom:20px;z-index:2}
+.sbox{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,200,0,.28);
+  border-radius:24px;padding:6px 18px;display:flex;align-items:center;gap:9px;
+}
+.slabel{color:rgba(255,255,255,.45);font-size:11px;font-family:Arial,sans-serif;display:block}
+.sval{color:#fff;font-size:17px;font-weight:900;font-family:'Arial Black',Arial,sans-serif}
+.coin{
+  width:30px;height:30px;border-radius:50%;
+  background:conic-gradient(#ffd700 0deg,#b8860b 180deg,#ffd700 360deg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;color:#3a2000;border:2px solid #ffd700;
+}
+.sbadge{
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,#ffd700,#e6a800);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:900;color:#3a2000;font-family:'Arial Black',Arial,sans-serif;
+}
+.info-lbl{color:rgba(255,255,255,.55);font-size:13px;font-family:Arial,sans-serif}
+.info-btn{
+  background:transparent;border:2px solid rgba(255,255,255,.38);border-radius:50%;
+  width:33px;height:33px;color:#fff;font-size:16px;cursor:pointer;font-style:italic;font-family:Georgia,serif;
+}
+.wheel-wrap{position:relative;width:390px;height:390px;z-index:2}
+.pointer{
+  position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:16px solid transparent;border-right:16px solid transparent;
+  border-top:38px solid #ffd700;
+  filter:drop-shadow(0 0 10px rgba(255,200,0,.9));
+  z-index:10;
+}
+.glow{
+  position:absolute;inset:-14px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,190,0,.16) 0%,transparent 68%);
+  pointer-events:none;animation:pg 2.2s ease-in-out infinite;
+}
+@keyframes pg{0%,100%{opacity:.55;transform:scale(.97)}50%{opacity:1;transform:scale(1.03)}}
+.spin-btn{
+  margin-top:26px;
+  background:linear-gradient(180deg,#ffe033 0%,#e6a800 50%,#c47d00 100%);
+  border:none;border-radius:12px;padding:15px 84px;
+  font-size:22px;font-weight:900;letter-spacing:3px;color:#2a1400;
+  cursor:pointer;text-transform:uppercase;
+  font-family:'Arial Black',Arial,sans-serif;
+  box-shadow:0 4px 22px rgba(255,170,0,.45),inset 0 2px 0 rgba(255,255,255,.22);
+  transition:transform .1s,box-shadow .1s;z-index:2;
+}
+.spin-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 30px rgba(255,170,0,.65),inset 0 2px 0 rgba(255,255,255,.22)}
+.spin-btn:active:not(:disabled){transform:translateY(0)}
+.spin-btn:disabled{opacity:.55;cursor:not-allowed}
+.result{
+  margin-top:18px;background:rgba(255,195,0,.1);border:1px solid rgba(255,200,0,.4);
+  border-radius:12px;padding:14px 32px;color:#ffd700;font-size:19px;font-weight:900;
+  text-align:center;letter-spacing:.5px;z-index:2;min-width:290px;
+  font-family:'Arial Black',Arial,sans-serif;
+  animation:bin .4s ease;
+}
+@keyframes bin{from{opacity:0;transform:scale(.8) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+</style>
+
+<div class="wf-wrap" id="root">
+  <div id="stardust"></div>
+  <div class="wf-title">Колесо Фортуны</div>
+  <div class="stats">
+    <div class="sbox">
+      <div class="coin">X</div>
+      <div><span class="slabel">Мои X-Coin</span><span class="sval">2</span></div>
+    </div>
+    <div class="sbox">
+      <div class="sbadge">XO</div>
+      <div><span class="slabel">Мой статус</span><span class="sval" style="font-size:14px">Одиночка</span></div>
+    </div>
+    <span class="info-lbl">info</span>
+    <button class="info-btn">i</button>
+  </div>
+
+  <div class="wheel-wrap">
+    <div class="pointer"></div>
+    <div class="glow"></div>
+    <svg id="wsvg" width="390" height="390" viewBox="0 0 390 390" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+
+  <button class="spin-btn" id="spinBtn">Крутить</button>
+  <div class="result" id="resultBox" style="display:none"></div>
+</div>
+
+<script>
+(function(){
+  const sd=document.getElementById('stardust');
+  for(let i=0;i<30;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*3+1.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*3.5}s;--dl:${Math.random()*4}s`;
+    sd.appendChild(s);
+  }
+
+  const prizes=[
+    {label:'PlayStation 5',  icon:'🎮'},
+    {label:'Планшет',        icon:'📱'},
+    {label:'Наушники',       icon:'🎧'},
+    {label:'X-Coin',         icon:'🪙'},
+    {label:'Смартфон',       icon:'📲'},
+    {label:'Nintendo Switch',icon:'🕹️'},
+    {label:'Не выиграл',     icon:'🚫'},
+    {label:'Умные часы',     icon:'⌚'},
+    {label:'Power Bank',     icon:'🔋'},
+    {label:'AirPods',        icon:'🎵'},
+  ];
+
+  const N=prizes.length;
+  const ARC=2*Math.PI/N;
+  const svg=document.getElementById('wsvg');
+  const ns='http://www.w3.org/2000/svg';
+  const CX=195,CY=195,R=183,IR=34;
+
+  function el(tag,attrs,parent){
+    const e=document.createElementNS(ns,tag);
+    for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);
+    if(parent)parent.appendChild(e);
+    return e;
+  }
+
+  svg.innerHTML='';
+
+  const defs=el('defs',{},svg);
+
+  const outerGrd=el('radialGradient',{id:'outerRim',cx:'50%',cy:'50%',r:'50%'},defs);
+  [[0,'#ffe066'],[0.45,'#e6a800'],[1,'#7a5200']].forEach(([o,c])=>{
+    const s=el('stop',{offset:o},outerGrd);s.style.stopColor=c;
+  });
+
+  const glowGrd=el('radialGradient',{id:'centerGlow',cx:'50%',cy:'50%',r:'50%'},defs);
+  [[0,'rgba(255,240,80,0.55)'],[0.6,'rgba(255,180,0,0.15)'],[1,'rgba(0,0,0,0)']].forEach(([o,c])=>{
+    const s=el('stop',{offset:o},glowGrd);s.style.stopColor=c;
+  });
+
+  const hubGrd=el('radialGradient',{id:'hubGrd',cx:'40%',cy:'35%',r:'65%'},defs);
+  [[0,'#ffe57a'],[0.5,'#c98f00'],[1,'#5a3c00']].forEach(([o,c])=>{
+    const s=el('stop',{offset:o},hubGrd);s.style.stopColor=c;
+  });
+
+  el('circle',{cx:CX,cy:CY,r:R+11,fill:'url(#outerRim)',stroke:'none'},svg);
+  el('circle',{cx:CX,cy:CY,r:R+4,fill:'none',stroke:'rgba(255,255,255,0.15)','stroke-width':'1'},svg);
+
+  const wheelGroup=el('g',{id:'wheelGroup'},svg);
+  const iconGroup=el('g',{id:'iconGroup'},svg);
+  const logoGroup=el('g',{id:'logoGroup'},svg);
+
+  const iconEls=[];
+
+  for(let i=0;i<N;i++){
+    const a0=-Math.PI/2+i*ARC;
+    const a1=a0+ARC;
+    const mid=a0+ARC/2;
+    const isGold=i%2===0;
+
+    const x0=CX+R*Math.cos(a0),y0=CY+R*Math.sin(a0);
+    const x1=CX+R*Math.cos(a1),y1=CY+R*Math.sin(a1);
+    const xi0=CX+IR*Math.cos(a0),yi0=CY+IR*Math.sin(a0);
+    const xi1=CX+IR*Math.cos(a1),yi1=CY+IR*Math.sin(a1);
+    const d=`M ${xi0} ${yi0} L ${x0} ${y0} A ${R} ${R} 0 0 1 ${x1} ${y1} L ${xi1} ${yi1} A ${IR} ${IR} 0 0 0 ${xi0} ${yi0} Z`;
+    el('path',{d,fill:isGold?'#d4940a':'#151000',stroke:'#ffd700','stroke-width':'1.2'},wheelGroup);
+
+    const edgeR=R-18;
+    const ex=CX+edgeR*Math.cos(mid);
+    const ey=CY+edgeR*Math.sin(mid);
+    const angle=mid*180/Math.PI+90;
+    const tg=el('g',{transform:`translate(${ex},${ey}) rotate(${angle})`},wheelGroup);
+    const te=el('text',{'text-anchor':'middle','dominant-baseline':'middle',
+      'font-family':'Arial Black,Arial,sans-serif','font-size':'8.5',
+      'font-weight':'900','letter-spacing':'1.5',
+      'fill':isGold?'#3a2000':'#ffd700'},tg);
+    te.textContent='COLIZEUX';
+
+    const iconR=R*0.52;
+    const ix=CX+iconR*Math.cos(mid);
+    const iy=CY+iconR*Math.sin(mid);
+    const ig=el('g',{transform:`translate(${ix},${iy})`},iconGroup);
+    const ie=el('text',{'text-anchor':'middle','dominant-baseline':'middle','font-size':'22'},ig);
+    ie.textContent=prizes[i].icon;
+    iconEls.push({el:ig, baseAngle:mid, ix, iy});
+
+    const dotX=CX+(R-3)*Math.cos(a0);
+    const dotY=CY+(R-3)*Math.sin(a0);
+    el('circle',{cx:dotX,cy:dotY,r:'3.5',fill:'#fff','fill-opacity':'.85'},wheelGroup);
+  }
+
+  el('circle',{cx:CX,cy:CY,r:IR*2.8,fill:'url(#centerGlow)'},wheelGroup);
+
+  el('circle',{cx:CX,cy:CY,r:IR+7,fill:'rgba(255,210,0,0.18)',stroke:'#ffd700','stroke-width':'1.5'},logoGroup);
+  el('circle',{cx:CX,cy:CY,r:IR,fill:'url(#hubGrd)',stroke:'#ffd700','stroke-width':'2'},logoGroup);
+  el('circle',{cx:CX,cy:CY,r:IR-5,fill:'none',stroke:'rgba(0,0,0,0.35)','stroke-width':'1'},logoGroup);
+  const logoTxt=el('text',{x:CX,y:CY+1,'text-anchor':'middle','dominant-baseline':'middle',
+    'font-family':'Arial Black,Arial,sans-serif','font-size':'18','font-weight':'900',fill:'#1a0f00'},logoGroup);
+  logoTxt.textContent='X';
+  for(let d=0;d<8;d++){
+    const da=-Math.PI/2+d*Math.PI/4;
+    el('circle',{cx:CX+(IR-10)*Math.cos(da),cy:CY+(IR-10)*Math.sin(da),r:'1.5',fill:'rgba(0,0,0,0.4)'},logoGroup);
+  }
+
+  let currentAngle=0;
+  let spinning=false;
+
+  function applyRotation(angle){
+    const deg=angle*180/Math.PI;
+    wheelGroup.setAttribute('transform',`rotate(${deg},${CX},${CY})`);
+    logoGroup.setAttribute('transform',`rotate(${-deg*2},${CX},${CY})`);
+
+    iconEls.forEach(item=>{
+      const cosA=Math.cos(angle);
+      const sinA=Math.sin(angle);
+      const nx=CX+(item.ix-CX)*cosA-(item.iy-CY)*sinA;
+      const ny=CY+(item.ix-CX)*sinA+(item.iy-CY)*cosA;
+      item.el.setAttribute('transform',`translate(${nx},${ny})`);
+    });
+  }
+
+  applyRotation(0);
+
+  const btn=document.getElementById('spinBtn');
+  const resultBox=document.getElementById('resultBox');
+
+  btn.addEventListener('click',function(){
+    if(spinning)return;
+    spinning=true;
+    btn.disabled=true;
+    resultBox.style.display='none';
+
+    const winner=Math.floor(Math.random()*N);
+    const extraTurns=5+Math.floor(Math.random()*5);
+    const sectorMid=-Math.PI/2+winner*ARC+ARC/2;
+    const pointerAngle=-Math.PI/2;
+    let diff=pointerAngle-sectorMid;
+    diff=diff-Math.floor(diff/(2*Math.PI))*2*Math.PI;
+    const finalAngle=currentAngle+extraTurns*2*Math.PI+diff;
+
+    const duration=4200+Math.random()*1400;
+    const startA=currentAngle;
+    const startT=performance.now();
+
+    function ease(t){return 1-Math.pow(1-t,4)}
+
+    function frame(now){
+      const elapsed=now-startT;
+      const t=Math.min(elapsed/duration,1);
+      const angle=startA+(finalAngle-startA)*ease(t);
+      applyRotation(angle);
+      if(t<1){
+        requestAnimationFrame(frame);
+      }else{
+        currentAngle=finalAngle;
+        spinning=false;
+        btn.disabled=false;
+        const p=prizes[winner];
+        resultBox.textContent=p.label==='Не выиграл'
+          ?'😔 Не повезло! Попробуй снова!'
+          :'🎉 Вы выиграли: '+p.icon+' '+p.label+'!';
+        resultBox.style.display='block';
+      }
+    }
+    requestAnimationFrame(frame);
+  });
+})();
+</script>

@@ -1,0 +1,32 @@
+<div class="history-header">
+  <h2 class="section-title">История попыток</h2>
+  @if (history().length > 0) {
+    <button class="clear-btn" (click)="clearHistory.emit()">Очистить историю</button>
+  }
+</div>
+
+<div class="history-card">
+  @if (history().length > 0) {
+    <div class="history-list">
+      @for (item of history(); track $index) {
+        <div class="history-item">
+          <div class="history-meta">
+            <span class="history-date">{{ item.date }}</span>
+            <span class="history-time">{{ item.time }}</span>
+          </div>
+          <div class="history-prize">
+            <span class="prize-emoji">{{ item.result.icon }}</span>
+            <span class="prize-label" [class.empty]="item.result.type === 'empty'">
+              {{ item.result.label }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-history">
+      <div class="empty-icon">🎮</div>
+      <p class="empty-text">История попыток пуста. Испытайте свою удачу!</p>
+    </div>
+  }
+</div>
