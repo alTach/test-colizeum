@@ -1,0 +1,16 @@
+{
+  "prizes": [
+    { "id": 1, "label": "1 час Standard", "type": "prize", "weight": 15, "icon": "⏱" },
+    { "id": 2, "label": "Не повезло", "type": "empty", "weight": 30, "icon": "—" },
+    { "id": 3, "label": "Скидка 30%", "type": "prize", "weight": 15, "icon": "🎟" },
+    { "id": 4, "label": "Энергетик", "type": "prize", "weight": 10, "icon": "⚡" },
+    { "id": 5, "label": "Не повезло", "type": "empty", "weight": 30, "icon": "—" },
+    { "id": 6, "label": "3 часа Standard", "type": "prize", "weight": 5, "icon": "⏱" },
+    { "id": 7, "label": "Скидка 50%", "type": "prize", "weight": 8, "icon": "🎟" },
+    { "id": 8, "label": "Не повезло", "type": "empty", "weight": 30, "icon": "—" },
+    { "id": 9, "label": "200 ₽", "type": "prize", "weight": 10, "icon": "💵" },
+    { "id": 10, "label": "1 час VIP", "type": "prize", "weight": 5, "icon": "⏱" },
+    { "id": 11, "label": "Не повезло", "type": "empty", "weight": 30, "icon": "—" },
+    { "id": 12, "label": "ДЖЕКПОТ", "type": "prize", "weight": 1, "icon": "🏆" }
+  ]
+}
